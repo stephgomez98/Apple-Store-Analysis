@@ -115,24 +115,347 @@ WHERE
 # Descriptive Statitics 
 Descriptive statistics are used to summarize, simplify, and understand datasets. They provide a quick overview of data's central tendencies, spread, and distribution, helping analysts identify patterns, trends, and outliers. Descriptive statistics aid in data cleaning, comparison, quality assurance, and decision-making. They also serve as a foundation for data visualization and effective communication of results, making complex data more accessible and actionable.
 - Central tendency: mean, median, mode
+
+Price: Understanding the average and median prices can help you determine pricing strategies for your app and assess user willingness to pay.
 ````sql
 mean
-SELECT AVG(column_name) AS mean
+SELECT AVG(price) AS mean
 FROM table_name;
-
 median
 ````
+Genre and Content Rating:This information helps identify popular genres and preferred content ratings, aiding your decision on app type and age-appropriateness.
+````sql
+mode for genre
+WITH CountValues AS (
+    SELECT genre, COUNT(*) AS value_count
+    FROM data
+    GROUP BY genre
+),
+MaxCount AS (
+    SELECT MAX(value_count) AS max_count
+    FROM CountValues
+)
+SELECT genre
+FROM CountValues
+WHERE value_count = (SELECT max_count FROM MaxCount);
+
+mode for content rating
+WITH CountValues AS (
+    SELECT content_rating, COUNT(*) AS value_count
+    FROM data
+    GROUP BY content_rating
+),
+MaxCount AS (
+    SELECT MAX(value_count) AS max_count
+    FROM CountValues
+)
+SELECT content_rating
+FROM CountValues
+WHERE value_count = (SELECT max_count FROM MaxCount);
+````
+ Size Bytes: Knowing the average and median app size helps you plan for storage, user experience, and understand user preferences regarding app size.
+````sql
+mean
+SELECT AVG(size_bytes) AS mean
+FROM table_name;
+median
+````
+Average User Rating: These statistics help you gauge the overall user satisfaction with apps in the dataset, which can guide your app development.
+````sql
+mean
+SELECT AVG(average_user_rating) AS mean
+FROM table_name;
+median
+mode
+WITH CountValues AS (
+    SELECT average_user_rating, COUNT(*) AS value_count
+    FROM data
+    GROUP BY average_user_rating
+),
+MaxCount AS (
+    SELECT MAX(value_count) AS max_count
+    FROM CountValues
+)
+SELECT average_user_rating
+FROM CountValues
+WHERE value_count = (SELECT max_count FROM MaxCount);
+````
+Number of Reviews: Understanding review counts helps you assess app popularity and user engagement.
+````sql
+mean
+SELECT AVG(number_of_reviews) AS mean
+FROM table_name;
+median
+mode
+WITH CountValues AS (
+    SELECT number_of_reviews, COUNT(*) AS value_count
+    FROM data
+    GROUP BY number_of_reviews
+),
+MaxCount AS (
+    SELECT MAX(value_count) AS max_count
+    FROM CountValues
+)
+SELECT number_of_reviews
+FROM CountValues
+WHERE value_count = (SELECT max_count FROM MaxCount);
+````
+Required iOS Version: Knowing the average and median required iOS version helps you target a suitable iOS user base for your app.
+````sql
+mean
+SELECT AVG(required_ios_version) AS mean
+FROM table_name;
+median
+````
+# Variability Analysis 
+Variability analysis is crucial for understanding the spread and dispersion of data in your dataset. It helps in identifying patterns, trends, and outliers, which can be valuable helping app developers determine what type of app to build, understanding user preferences, market trends, and the competitive landscape. 
+
+- Variability: varince, standard deviation, max, and min
+
+Standard Deviation of User Ratings by Genre:
+
+This query calculates the standard deviation of user ratings for different app genres. High standard deviations indicate a wide range of user ratings, which may suggest more variability in user preferences within that genre. Understanding this variability can help developers target specific genres with more or less rating consistency.
+````sql
+SELECT genre, AVG(average_user_rating) AS avg_user_rating, STDEV(average_user_rating) AS rating_std_dev
+FROM data
+GROUP BY genre
+ORDER BY rating_std_dev DESC;
+````
+Price Variability by Genre:
+
+This query explores the variability in app prices within different genres. It calculates the standard deviation of prices for each genre, helping developers identify genres with varying pricing strategies and user expectations. High price standard deviations may indicate a wide range of prices in a genre.
+````sql
+SELECT genre, MAX(price) AS max_price, MIN(price) AS min_price, STDEV(price) AS price_std_dev
+FROM data
+GROUP BY genre
+ORDER BY price_std_dev DESC;
+````
+Variability in Number of Reviews by Genre:
+
+This query assesses the variability in the number of reviews within different app genres. High standard deviations in review counts may signify variability in user engagement and the competitive nature of the genre.
+````sql
+SELECT genre, MAX(number_of_reviews) AS max_reviews, MIN(number_of_reviews) AS min_reviews, STDEV(number_of_reviews) AS reviews_std_dev
+FROM data
+GROUP BY genre
+ORDER BY reviews_std_dev DESC;
+````
+Release Date Variability by Genre:
+
+Analyzing the variability in release dates within genres helps developers understand how genres evolve over time. High standard deviations in release dates may indicate dynamically changing genres or inconsistent app updates.
+
+````sql
+SELECT genre, MAX(released_date) AS latest_release, MIN(released_date) AS earliest_release, STDEV(released_date) AS release_date_std_dev
+FROM data
+GROUP BY genre
+ORDER BY release_date_std_dev DESC;
+````
+Version Update Frequency by Genre:
+
+This query explores the variability in app update frequency (measured in days between updates) within genres. High standard deviations in update frequencies may indicate irregular update patterns, which can be important for competitive analysis and user satisfaction.
+
+````sql
+SELECT genre, AVG(updated_date - released_date) AS avg_days_between_updates, STDEV(updated_date - released_date) AS update_freq_std_dev
+FROM data
+GROUP BY genre
+ORDER BY update_freq_std_dev DESC;
+````
+Content Rating Variability by Genre:
+
+This query calculates the standard deviation of user ratings within each genre and content rating combination. It helps identify genres and content ratings with varying user preferences, which can be important for building apps that align with audience expectations.
+
+````sql
+SELECT genre, content_rating, COUNT(*) AS app_count, STDEV(average_user_rating) AS rating_std_dev
+FROM data
+GROUP BY genre, content_rating
+HAVING COUNT(*) > 10
+ORDER BY genre, rating_std_dev DESC;
+````
 # Explore Categorical Data
+
+Exploring categorical data in data analysis is a fundamental practice because it unveils critical insights within datasets. It enables the identification of patterns and trends, which is particularly valuable for understanding user preferences, market dynamics, and the competitive landscape. By segmenting the market and targeting specific user demographics, it aids in tailored decision-making, such as choosing the right type of app to build, aligning content with age-appropriate ratings, and determining pricing strategies. Additionally, it ensures user satisfaction and app quality by analyzing user ratings, reviews, and engagement. Categorical data exploration also helps developers stay up-to-date with market trends, identify successful peers, explore collaboration opportunities, and maintain compliance with content guidelines. In summary, exploring categorical data is essential for data analysis as it equips developers with the insights needed to create user-focused, successful apps and adapt to the ever-changing app market.
+
+Explore App Genres: 
+
+This query helps app developers identify popular and in-demand app genres. Knowing which genres have a higher number of apps can inform developers about potential opportunities in those genres and help them make informed decisions about the type of app to build.
 ````sql
 SELECT DISTINCT [genre], COUNT(*) AS app_count
 FROM [dbo].[data]
 GROUP BY [genre]
 ORDER BY app_count DESC;
+````
+Explore Content Ratings:
 
-
+Understanding the distribution of content ratings allows developers to ensure that their apps are appropriately rated for their target audience. It helps in adhering to age restrictions and creating age-appropriate content, which is crucial for user satisfaction and compliance.
+````sql
 SELECT DISTINCT [content_rating], COUNT(*) AS app_count
 FROM [dbo].[data]
 GROUP BY [content_rating]
 ORDER BY app_count DESC;
 ````
+Identify Top Developers:
+
+Identifying top developers by the number of apps they've developed can help developers identify potential collaborators, learn from successful developers, or assess the competitive landscape in the app store.
+````sql
+SELECT developer_name, COUNT(*) AS app_count
+FROM [dbo].[data]
+GROUP BY developer_name
+ORDER BY app_count DESC;
+````
+Analze User Rating:
+
+This query helps developers evaluate the average user rating for each genre. It provides insights into which genres tend to have higher user satisfaction, enabling developers to make genre-specific decisions and understand user preferences.
+````sql
+SELECT genre, AVG(average_user_rating) AS avg_user_rating
+FROM [dbo].[data]
+GROUP BY genre
+ORDER BY avg_user_rating DESC;
+````
+User Engagement:
+
+By counting the number of reviews for apps in each genre, developers can gauge the level of user engagement and feedback. Genres with more reviews may indicate competitive markets and user interaction.
+````sql
+SELECT genre, SUM(number_of_reviews) AS total_reviews
+FROM [dbo].[data]
+GROUP BY genre
+ORDER BY total_reviews DESC;
+````
+Age-Appropriate Genre: 
+
+This query helps developers explore the intersection of genre and content rating, ensuring that apps are suitable for the intended audience. It assists in aligning content with age-appropriate categories.
+````sql
+SELECT content_rating, genre, COUNT(*) AS app_count
+FROM [dbo].[data]
+GROUP BY content_rating, genre
+ORDER BY content_rating, app_count DESC;
+````
+Developer Performance:
+
+Finding top developers by the number of apps and their average user ratings provides insights into successful developers. Developers can consider collaboration opportunities, benchmark against successful developers, and assess the competitive landscape.
+````sql
+SELECT developer_name, COUNT(*) AS app_count, AVG(average_user_rating) AS avg_user_rating
+FROM [dbo].[data]
+GROUP BY developer_name
+ORDER BY app_count DESC;
+````
+App Version Trends: 
+
+Analyzing app version trends by genre helps developers understand the update frequency and track the latest versions. Frequent updates may signify an active developer and a responsive app, important for maintaining user engagement.
+````sql
+SELECT genre, MAX(version) AS latest_version, MIN(released_date) AS first_release_date
+FROM [dbo].[data]
+GROUP BY genre
+ORDER BY genre;
+````
+App Lifecycle: 
+
+Examining the app lifecycle by genre and the average time between updates provides insights into how long apps remain relevant in specific genres. Developers can identify trends and tailor their update strategies.
+````sql
+SELECT genre, DATEDIFF(day, MIN(released_date), MAX(updated_date)) AS average_days_between_updates
+FROM [dbo].[data]
+GROUP BY genre
+ORDER BY genre;
+````
 # Exploratory Data Analysis
+EDA is a crucial step in data analysis that provides a comprehensive understanding of the data, uncovers insights, identifies data quality issues, and sets the stage for more advanced analyses. It is a data exploration process that supports better decision-making and informed data analysis.
+
+Genre Analysis for User Ratings and Engagement:
+
+This query is helpful because it reveals which app genres have the highest average user rating and the most user reviews provides actionable insights for app developers. It assists in genre selection, user engagement strategies, and competitive positioning. Understanding user preferences and satisfaction is key to building successful apps and maintaining a competitive edge in the market.
+````sql
+SELECT genre, 
+       AVG(average_user_rating) AS avg_rating, 
+       SUM(number_of_reviews) AS total_reviews
+FROM data
+WHERE average_user_rating IS NOT NULL
+GROUP BY genre
+ORDER BY avg_rating DESC, total_reviews DESC;
+````
+Content Rating Analysis for User Satisfaction:
+
+This query helps app developers make data-informed decisions about content, targeting specific content ratings that lead to high user satisfaction and ensuring compliance with guidelines. It contributes to the development of apps that are well-received by users and can guide content strategy and improvement efforts.
+
+````sql
+SELECT content_rating, 
+       AVG(average_user_rating) AS avg_Rating, 
+       SUM(number_of_reviews) AS total_Reviews
+FROM data
+WHERE average_user_rating IS NOT NULL
+GROUP BY content_rating
+ORDER BY avg_rating DESC, total_reviews DESC;
+````
+Price Analysis for User Ratings and Engagement:
+
+this query is helpful because it assists app developers in making informed decisions about app pricing, user satisfaction, and engagement. It provides valuable insights for shaping pricing strategies, optimizing resource allocation, and positioning apps effectively in the competitive app market.
+
+````sql
+SELECT
+    price,
+    AVG(average_user_rating) AS avg_rating,
+    SUM(number_of_reviews) AS total_reviews
+FROM data
+WHERE average_user_rating IS NOT NULL
+GROUP BY price
+ORDER BY avg_rating DESC, total_reviews DESC;
+````
+Top Developers Analysis for App Inspiration and Insights:
+
+this query is helpful because it provides a source of inspiration, insights, and valuable information for app developers. It offers a window into the strategies and success of top developers, enabling others to learn from their experiences and make informed decisions about their own app development projects.
+````sql
+SELECT TOP 10 developer_name, COUNT(*) AS App_Count
+FROM data
+GROUP BY developer_name
+ORDER BY App_Count DESC;
+````
+App Size Analysis for User Ratings Impact:
+
+this query is helpful as it provides valuable insights into the relationship between app size and user ratings, allowing developers to optimize resource allocation, enhance user satisfaction, and align their app development strategies with market expectations.
+````sql
+SELECT
+    CASE
+        WHEN size_bytes < 10000000 THEN 'Small'
+        WHEN size_bytes < 50000000 THEN 'Medium'
+        ELSE 'Large'
+    END AS App_Size,
+    AVG(average_user_rating) AS avg_rating
+FROM data
+WHERE average_user_rating IS NOT NULL
+GROUP BY
+    CASE
+        WHEN size_bytes < 10000000 THEN 'Small'
+        WHEN Size_bytes < 50000000 THEN 'Medium'
+        ELSE 'Large'
+    END;
+````
+iOS Version Analysis for User Ratings Optimization:
+
+This query is helpful because it provides insights into the relationship between the required iOS version and user ratings, allowing app developers to optimize user satisfaction, target the right iOS versions, and make informed decisions about resource allocation and market strategy
+
+````sql
+
+SELECT
+    Required_IOS_Version,
+    AVG(Average_User_Rating) AS Avg_Rating
+FROM data
+WHERE Average_User_Rating IS NOT NULL
+GROUP BY Required_IOS_Version
+ORDER BY Avg_Rating DESC;
+````
+Popularity Analysis of Paid Apps in User Ratings and Reviews:
+
+this query is helpful because it provides insights into the popularity of paid apps in terms of user engagement, user satisfaction, and competitiveness. It assists app developers in optimizing their app development, pricing, and marketing strategies for paid apps
+
+````sql
+SELECT
+    AVG(Average_User_Rating) AS Avg_Rating,
+    SUM(Number_of_Reviews) AS Total_Reviews
+FROM data
+WHERE price>0
+    AND Average_User_Rating IS NOT NULL
+GROUP BY Price
+ORDER BY total_reviews DESC;
+````
+# Ad Hoc Queries
+
+Ad hoc queries are a crucial component of a data analysis project as they provide the flexibility to address unforeseen questions, adapt to changing requirements, and facilitate agile decision-making. They empower analysts to delve deeper into the data and uncover valuable insights that may not have been part of the initial analysis plan.
+
+
