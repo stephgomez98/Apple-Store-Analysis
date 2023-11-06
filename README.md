@@ -458,4 +458,41 @@ ORDER BY total_reviews DESC;
 
 Ad hoc queries are a crucial component of a data analysis project as they provide the flexibility to address unforeseen questions, adapt to changing requirements, and facilitate agile decision-making. They empower analysts to delve deeper into the data and uncover valuable insights that may not have been part of the initial analysis plan.
 
+This ad hoc query retrieves apps that belong to the "Games" genre and have a "Teen" content rating.
 
+````sql
+SELECT
+    app_name,
+    genre,
+    content_rating
+FROM data
+WHERE genre = 'games' AND content_rating >12;
+````
+Query to find apps with file sizes greater than a specific threshold
+````sql
+SELECT
+    app_name,
+    size_bytes
+FROM data
+WHERE size_bytes > 100000000;
+````
+Query to identify apps with both high user ratings and a substantial number of reviews.
+````sql
+SELECT
+    app_name,
+    average_user_rating,
+    number_of_reviews
+FROM data
+WHERE average_user_rating >= 4.5 AND number_of_reviews > 1000
+ORDER BY average_user_rating DESC, number_of_reviews DESC;
+````
+This query to find the top 10 most expensive paid apps.
+````sql
+SELECT TOP 10
+    app_name,
+    price
+FROM data
+WHERE price > 10
+ORDER BY price DESC
+````
+# Final Recommendations
