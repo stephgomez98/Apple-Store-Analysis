@@ -496,3 +496,7 @@ WHERE price > 10
 ORDER BY price DESC
 ````
 # Final Recommendations using POWER BI
+
+
+https://github.com/stephgomez98/Apple-Store-Analysis/assets/129236241/3df175a0-4ee8-4bca-97d5-79c5a9dca9d8
+
