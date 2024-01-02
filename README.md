@@ -3,7 +3,7 @@ An app developer needs data driven insights to decide what type of app to build.
 # Context
 In this project the app developers are identified as the stakeholders. App developers often rely on data-driven insights to determine what type of app to build, understanding user preferences, market trends, and the competitive landscape.For a recent project aimed at aiding this decision-making process, I leveraged a valuable resource: an extensive app store dataset obtained from Kaggle. This dataset, accessible at https://www.kaggle.com/datasets/gauthamp10/apple-appstore-apps. 
 # Objective
-By analyzing and drawing insights from this comprehensive dataset, I aimed to help app developers make data-informed choices when deciding on the type of app to develop. This involved assessing market demands, identifying successful genres, understanding user preferences, and considering competitive factors. The dataset from Kaggle served as a foundational resource, facilitating a data-centric approach to app development and enabling developers to create apps that resonate with their target audience. The project's results and insights will contribute to the app development community, , offering valuable information for strategizing, planning, and ultimately creating successful and impactful mobile applications
+By analyzing and drawing insights from this dataset, I aimed to help app developers make data-informed choices when deciding on the type of app to develop. This involved assessing market demands, identifying successful genres, understanding user preferences, and considering competitive factors. The project's results and insights will contribute to the app development community, offering valuable information for strategizing, planning, and ultimately creating successful and impactful mobile applications that resonate with their target audience.
 # Column Descriptions:
 | Column Name          | Description                                                                                   |
 | --------------------  | --------------------------------------------------------------------------------------------- |
@@ -16,6 +16,7 @@ By analyzing and drawing insights from this comprehensive dataset, I aimed to he
 | updated_date         | The date when the app was last updated on the App Store.                                      |
 | version              | The version number of the app, which typically follows a format like "1.2.3".                  |
 | price                | The price of the app, which can be in various currencies, or it can be "Free" for free apps.    |
+| free                 | If the app is free it has the value of true for the row    |
 | developer_id         | The unique identifier for the app's developer or development team.                             |
 | developer_name       | The name of the developer or development team responsible for the app.                         |
 | average_user_rating  | The average user rating of the app, often displayed as a number out of 5 stars.                |
@@ -23,7 +24,7 @@ By analyzing and drawing insights from this comprehensive dataset, I aimed to he
 # Cleaning Data
 - Setting proper naming conventions:
 
-The dataset originally used Pascal Snake Case naming conventions for each column, but I decided to switch to Snake Case naming conventions for enhanced readability. Snake_case not only improves readability but also makes it more straightforward to identify and understand the operations applied to the data.
+The dataset originally used Pascal Snake Case naming conventions for each column, but I decided to switch to Snake Case naming conventions for enhanced readability. Snake_case not only improves readability but also makes easier to identify when claues and functions are used.
 ````sql
 EXEC sp_rename 'data.App_Name', 'app_name', 'COLUMN';
 EXEC sp_rename 'data.Primary_Genre', 'genre', 'COLUMN';
@@ -42,8 +43,7 @@ EXEC sp_rename 'data.Average_User_Rating', 'average_user_rating', 'COLUMN';
 EXEC sp_rename 'data.Number_of_Reviews', 'number_of_reviews', 'COLUMN';
 ````
 - Setting proper data type and size:
-  
-I've made a significant enhancement to the dataset by aligning columns with the proper data types.For instance, I've ensured that text-based data types like CHAR, VARCHAR, and TEXT, designed for storing textual information, are employed solely for their intended purpose. This measure helps prevent potential errors stemming from attempting arithmetic operations on data primarily meant for text, a practice that can lead to inaccuracies.Furthermore, I've optimized data storage by employing data types and sizes that are a precise fit for the information they represent. By avoiding overly large data types, we mitigate the risk of squandering storage space, particularly vital in the context of expansive databases. Moreover, this meticulous attention to the appropriate sizes contributes to the overall efficiency of data retrieval and query performance. Smaller data types not only process faster but also demand less memory resources, resulting in expedited and more resource-efficient data operations.
+I've made a significant enhancement to the dataset by aligning columns with the proper data types.For instance, I've ensured that text-based data types like CHAR, VARCHAR, and TEXT, designed for storing textual information, are employed solely for their intended purpose. This measure helps prevent potential errors stemming from attempting arithmetic operations on data primarily meant for text, a practice that can lead to inaccuracies.Furthermore, I've optimized data storage by employing data types and sizes that are a precise fit for the information they represent. By avoiding overly large data types, we mitigate the risk of squandering storage space, particularly vital in the context of expansive databases. Moreover, this meticulous attention to the appropriate sizes contributes to the overall efficiency of data retrieval and query performance since smaller data types not only process faster but also demand less memory resources.
 ````sql
 ALTER TABLE data
 ALTER COLUMN [size_bytes] BIGINT;
@@ -117,12 +117,14 @@ Descriptive statistics are used to summarize, simplify, and understand datasets.
 - Central tendency: mean, median, mode
 
 Price: Understanding the average and median prices can help you determine pricing strategies for your app and assess user willingness to pay.
-````sql
+
 mean
+````sql
 SELECT AVG(price) AS mean
 FROM table_name;
-median
 ````
+median
+
 Genre and Content Rating:This information helps identify popular genres and preferred content ratings, aiding your decision on app type and age-appropriateness.
 ````sql
 mode for genre
@@ -208,7 +210,7 @@ FROM table_name;
 median
 ````
 # Variability Analysis 
-Variability analysis is crucial for understanding the spread and dispersion of data in your dataset. It helps in identifying patterns, trends, and outliers, which can be valuable helping app developers determine what type of app to build, understanding user preferences, market trends, and the competitive landscape. 
+Variability analysis is crucial for understanding the spread and dispersion of data in your dataset. 
 
 - Variability: varince, standard deviation, max, and min
 
@@ -272,7 +274,7 @@ ORDER BY genre, rating_std_dev DESC;
 ````
 # Explore Categorical Data
 
-Exploring categorical data in data analysis is a fundamental practice because it unveils critical insights within datasets. It enables the identification of patterns and trends, which is particularly valuable for understanding user preferences, market dynamics, and the competitive landscape. By segmenting the market and targeting specific user demographics, it aids in tailored decision-making, such as choosing the right type of app to build, aligning content with age-appropriate ratings, and determining pricing strategies. Additionally, it ensures user satisfaction and app quality by analyzing user ratings, reviews, and engagement. Categorical data exploration also helps developers stay up-to-date with market trends, identify successful peers, explore collaboration opportunities, and maintain compliance with content guidelines. In summary, exploring categorical data is essential for data analysis as it equips developers with the insights needed to create user-focused, successful apps and adapt to the ever-changing app market.
+Exploring categorical data in data analysis is a fundamental practice because it unveils critical insights within datasets.It aids in tailored decision-making, such as choosing the right type of app to build, aligning content with age-appropriate ratings, and determining pricing strategies. Additionally, it ensures user satisfaction and app quality by analyzing user ratings, reviews, and engagement. Categorical data exploration also helps developers stay up-to-date with market trends, identify successful peers, explore collaboration opportunities, and maintain compliance with content guidelines. In summary, exploring categorical data is essential for data analysis as it equips developers with the insights needed to create user-focused, successful apps and adapt to the ever-changing app market.
 
 Explore App Genres: 
 
@@ -456,7 +458,7 @@ ORDER BY total_reviews DESC;
 ````
 # Ad Hoc Queries
 
-Ad hoc queries are a crucial component of a data analysis project as they provide the flexibility to address unforeseen questions, adapt to changing requirements, and facilitate agile decision-making. They empower analysts to delve deeper into the data and uncover valuable insights that may not have been part of the initial analysis plan.
+Ad hoc queries allows the flexibility to address unforeseen questions, adapt to changing requirements, and facilitate agile decision-making. They empower analysts to delve deeper into the data and uncover valuable insights that may not have been part of the initial analysis plan. Below I have come up with ad hoc query questions that departments or individuals may be asking an analyst from this dataset.
 
 This ad hoc query retrieves apps that belong to the "Games" genre and have a "Teen" content rating.
 
