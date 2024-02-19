@@ -2,7 +2,7 @@
 An app developer needs data driven insights to decide what type of app to build.
 # Context
 In this project the app developers are identified as the stakeholders. App developers often rely on data-driven insights to determine what type of app to build, understanding user preferences, market trends, and the competitive landscape. For this project I will be helped the app developer gain these insights in order to be more strategic in their decision-making process, leading to the development of apps that are aligned with user preferences, market trends, and have a competitive advantage in the marketplace.
-#Dataset Source
+# Dataset Source
 https://www.kaggle.com/datasets/gauthamp10/apple-appstore-apps. 
 # Objective
 The project's results and insights will contribute to the app developers' ability to make informed decisions about app development strategies, prioritize features and functionalities based on user demand, optimize marketing efforts, and ultimately enhance the success and profitability of their apps in the competitive app marketplace.
