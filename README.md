@@ -1,9 +1,11 @@
 # Apple-Store-Analysis 📱
 An app developer needs data driven insights to decide what type of app to build.
 # Context
-In this project the app developers are identified as the stakeholders. App developers often rely on data-driven insights to determine what type of app to build, understanding user preferences, market trends, and the competitive landscape.For a recent project aimed at aiding this decision-making process, I leveraged a valuable resource: an extensive app store dataset obtained from Kaggle. This dataset, accessible at https://www.kaggle.com/datasets/gauthamp10/apple-appstore-apps. 
+In this project the app developers are identified as the stakeholders. App developers often rely on data-driven insights to determine what type of app to build, understanding user preferences, market trends, and the competitive landscape. For this project I will be helped the app developer gain these insights in order to be more strategic in their decision-making process, leading to the development of apps that are aligned with user preferences, market trends, and have a competitive advantage in the marketplace.
+#Dataset Source
+https://www.kaggle.com/datasets/gauthamp10/apple-appstore-apps. 
 # Objective
-By analyzing and drawing insights from this dataset, I aimed to help app developers make data-informed choices when deciding on the type of app to develop. This involved assessing market demands, identifying successful genres, understanding user preferences, and considering competitive factors. The project's results and insights will contribute to the app development community, offering valuable information for strategizing, planning, and ultimately creating successful and impactful mobile applications that resonate with their target audience.
+The project's results and insights will contribute to the app developers' ability to make informed decisions about app development strategies, prioritize features and functionalities based on user demand, optimize marketing efforts, and ultimately enhance the success and profitability of their apps in the competitive app marketplace.
 # Column Descriptions:
 | Column Name          | Description                                                                                   |
 | --------------------  | --------------------------------------------------------------------------------------------- |
@@ -24,7 +26,7 @@ By analyzing and drawing insights from this dataset, I aimed to help app develop
 # Cleaning Data
 - Setting proper naming conventions:
 
-The dataset originally used Pascal Snake Case naming conventions for each column, but I decided to switch to Snake Case naming conventions for enhanced readability. Snake_case not only improves readability but also makes easier to identify when claues and functions are used.
+The dataset originally used Pascal Snake Case naming conventions for each column. I decided to switch to Snake Case naming conventions for enhanced readability. Snake_case not only improves readability but also makes easier to identify when claues and functions are used.
 ````sql
 EXEC sp_rename 'data.App_Name', 'app_name', 'COLUMN';
 EXEC sp_rename 'data.Primary_Genre', 'genre', 'COLUMN';
@@ -43,7 +45,9 @@ EXEC sp_rename 'data.Average_User_Rating', 'average_user_rating', 'COLUMN';
 EXEC sp_rename 'data.Number_of_Reviews', 'number_of_reviews', 'COLUMN';
 ````
 - Setting proper data type and size:
-I've made a significant enhancement to the dataset by aligning columns with the proper data types.For instance, I've ensured that text-based data types like CHAR, VARCHAR, and TEXT, designed for storing textual information, are employed solely for their intended purpose. This measure helps prevent potential errors stemming from attempting arithmetic operations on data primarily meant for text, a practice that can lead to inaccuracies.Furthermore, I've optimized data storage by employing data types and sizes that are a precise fit for the information they represent. By avoiding overly large data types, we mitigate the risk of squandering storage space, particularly vital in the context of expansive databases. Moreover, this meticulous attention to the appropriate sizes contributes to the overall efficiency of data retrieval and query performance since smaller data types not only process faster but also demand less memory resources.
+I've enchanced the integrity of the dataset by correcting the datatypes, making sure that data types the CHAR, VARCHAR, and TEXT, and being applied to only textual information. This practice also helps prevent potentional erros when attempting arithmetic operations on data meant for text. In these alter queries I also changed the size of the columns to optimize data storage and increase the speed of data retrievel and query performance since smaller column sizes result in faster data access and processing. This change allows for less memory to be taken up as well.
+
+
 ````sql
 ALTER TABLE data
 ALTER COLUMN [size_bytes] BIGINT;
@@ -113,19 +117,17 @@ WHERE
 	average_user_rating = ROUND(average_user_rating, 2);
 ````
 # Descriptive Statitics 
-Descriptive statistics are used to summarize, simplify, and understand datasets. They provide a quick overview of data's central tendencies, spread, and distribution, helping analysts identify patterns, trends, and outliers. Descriptive statistics aid in data cleaning, comparison, quality assurance, and decision-making. They also serve as a foundation for data visualization and effective communication of results, making complex data more accessible and actionable.
+Descriptive statistics are used to summarize, simplify, and understand datasets. They provide a quick overview of data's central tendencies, spread, and distribution, helping analysts identify patterns, trends, and outliers. 
 - Central tendency: mean, median, mode
 
-Price: Understanding the average and median prices can help you determine pricing strategies for your app and assess user willingness to pay.
+Price: Understanding the average price can help determine pricing strategies for your app and assess user willingness to pay.
 
 mean
 ````sql
 SELECT AVG(price) AS mean
 FROM table_name;
 ````
-median
-
-Genre and Content Rating:This information helps identify popular genres and preferred content ratings, aiding your decision on app type and age-appropriateness.
+    Genre and Content Rating:This information helps identify popular genres and preferred content ratings, aiding your decision on app type and age-appropriateness.
 ````sql
 mode for genre
 WITH CountValues AS (
@@ -155,14 +157,13 @@ SELECT content_rating
 FROM CountValues
 WHERE value_count = (SELECT max_count FROM MaxCount);
 ````
- Size Bytes: Knowing the average and median app size helps you plan for storage, user experience, and understand user preferences regarding app size.
+Size Bytes: Knowing the average app size helps you plan for storage, user experience, and understand user preferences regarding app size.
 ````sql
 mean
 SELECT AVG(size_bytes) AS mean
 FROM table_name;
-median
 ````
-Average User Rating: These statistics help you gauge the overall user satisfaction with apps in the dataset, which can guide your app development.
+          Average User Rating: These statistics help you gauge the overall user satisfaction with apps in the dataset, which can guide your app development.
 ````sql
 mean
 SELECT AVG(average_user_rating) AS mean
