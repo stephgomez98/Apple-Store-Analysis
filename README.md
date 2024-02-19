@@ -24,7 +24,7 @@ The project's results and insights will contribute to the app developers' abilit
 | average_user_rating  | The average user rating of the app, often displayed as a number out of 5 stars.                |
 | number_of_reviews    | The total number of user reviews and ratings for the app.                                     |
 # Cleaning Data
-Setting proper naming conventions:
+- Setting proper naming conventions:
 
 The dataset originally used Pascal Snake Case naming conventions for each column. I decided to switch to Snake Case naming conventions for enhanced readability. Snake_case not only improves readability but also makes easier to identify when claues and functions are used.
 ````sql
@@ -45,6 +45,7 @@ EXEC sp_rename 'data.Average_User_Rating', 'average_user_rating', 'COLUMN';
 EXEC sp_rename 'data.Number_of_Reviews', 'number_of_reviews', 'COLUMN';
 ````
 - Setting proper data type and size:
+  
 I've enchanced the integrity of the dataset by correcting the datatypes, making sure that data types the CHAR, VARCHAR, and TEXT, and being applied to only textual information. This practice also helps prevent potentional erros when attempting arithmetic operations on data meant for text. In these alter queries I also changed the size of the columns to optimize data storage and increase the speed of data retrievel and query performance since smaller column sizes result in faster data access and processing. This change allows for less memory to be taken up as well.
 
 
