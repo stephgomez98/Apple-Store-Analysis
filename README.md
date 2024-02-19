@@ -24,7 +24,7 @@ The project's results and insights will contribute to the app developers' abilit
 | average_user_rating  | The average user rating of the app, often displayed as a number out of 5 stars.                |
 | number_of_reviews    | The total number of user reviews and ratings for the app.                                     |
 # Cleaning Data
-- Setting proper naming conventions:
+Setting proper naming conventions:
 
 The dataset originally used Pascal Snake Case naming conventions for each column. I decided to switch to Snake Case naming conventions for enhanced readability. Snake_case not only improves readability but also makes easier to identify when claues and functions are used.
 ````sql
