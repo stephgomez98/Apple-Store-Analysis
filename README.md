@@ -67,8 +67,7 @@ ALTER COLUMN [version] VARCHAR(100);
 ````
 - Removing duplicates for app name:
 ````sql
-WITH CTE AS
-(
+WITH CTE AS(
 SELECT app_name, genre, content_rating, size_bytes, required_ios_version, 
 	released_date, updated_date, version, price, currency, free, developer_id, 
 	developer_name, average_user_rating, number_of_reviews,
