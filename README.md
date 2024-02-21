@@ -46,7 +46,7 @@ EXEC sp_rename 'data.Number_of_Reviews', 'number_of_reviews', 'COLUMN';
 ````
 - Setting proper data type and size:
   
-I've enchanced the integrity of the dataset by correcting the datatypes, making sure that data types the CHAR, VARCHAR, and TEXT, and being applied to only textual information. This practice also helps prevent potentional erros when attempting arithmetic operations on data meant for text. In these alter queries I also changed the size of the columns to optimize data storage and increase the speed of data retrievel and query performance since smaller column sizes result in faster data access and processing. This change allows for less memory to be taken up as well.
+I've enchanced the integrity of the dataset by correcting the datatypes, making sure that data types the CHAR, VARCHAR, and TEXT, and being applied to only textual information. This practice also helps prevent potential errors when attempting arithmetic operations on data meant for text. In these alter queries I also changed the size of the columns to optimize data storage and increase the speed of data retrievel and query performance since smaller column sizes result in faster data access and processing. This change allows for less memory to be taken up.
 
 
 ````sql
@@ -127,88 +127,41 @@ mean
 SELECT AVG(price) AS mean
 FROM table_name;
 ````
-    Genre and Content Rating:This information helps identify popular genres and preferred content ratings, aiding your decision on app type and age-appropriateness.
+Genre and Content Rating:This information helps identify popular genres aiding your decision on app type.
 ````sql
 mode for genre
-WITH CountValues AS (
-    SELECT genre, COUNT(*) AS value_count
-    FROM data
-    GROUP BY genre
-),
-MaxCount AS (
-    SELECT MAX(value_count) AS max_count
-    FROM CountValues
-)
-SELECT genre
-FROM CountValues
-WHERE value_count = (SELECT max_count FROM MaxCount);
+  Select TOP 1 count(genre) as Count1, genre from Adata group by genre order by Count1 DESC
 
-mode for content rating
-WITH CountValues AS (
-    SELECT content_rating, COUNT(*) AS value_count
-    FROM data
-    GROUP BY content_rating
-),
-MaxCount AS (
-    SELECT MAX(value_count) AS max_count
-    FROM CountValues
-)
-SELECT content_rating
-FROM CountValues
-WHERE value_count = (SELECT max_count FROM MaxCount);
 ````
 Size Bytes: Knowing the average app size helps you plan for storage, user experience, and understand user preferences regarding app size.
 ````sql
 mean
 SELECT AVG(size_bytes) AS mean
-FROM table_name;
+FROM data;
+mode
+Select TOP 1 count(size_bytes) as Count1, size_bytes from Adata group by size_bytes order by Count1 DESC
 ````
-          Average User Rating: These statistics help you gauge the overall user satisfaction with apps in the dataset, which can guide your app development.
+Average User Rating: These statistics help you gauge the overall user satisfaction with apps in the dataset, which can guide your app development.
 ````sql
 mean
 SELECT AVG(average_user_rating) AS mean
-FROM table_name;
-median
+FROM data;
 mode
-WITH CountValues AS (
-    SELECT average_user_rating, COUNT(*) AS value_count
-    FROM data
-    GROUP BY average_user_rating
-),
-MaxCount AS (
-    SELECT MAX(value_count) AS max_count
-    FROM CountValues
-)
-SELECT average_user_rating
-FROM CountValues
-WHERE value_count = (SELECT max_count FROM MaxCount);
+Select TOP 1 count(average_user_rating) as Count1, average_user_rating from Adata group by average_user_rating order by Count1 DESC
+
 ````
 Number of Reviews: Understanding review counts helps you assess app popularity and user engagement.
 ````sql
 mean
 SELECT AVG(number_of_reviews) AS mean
-FROM table_name;
-median
-mode
-WITH CountValues AS (
-    SELECT number_of_reviews, COUNT(*) AS value_count
-    FROM data
-    GROUP BY number_of_reviews
-),
-MaxCount AS (
-    SELECT MAX(value_count) AS max_count
-    FROM CountValues
-)
-SELECT number_of_reviews
-FROM CountValues
-WHERE value_count = (SELECT max_count FROM MaxCount);
+FROM data;
 ````
 Required iOS Version: Knowing the average and median required iOS version helps you target a suitable iOS user base for your app.
 ````sql
 mean
 SELECT AVG(required_ios_version) AS mean
-FROM table_name;
-median
+FROM data;
+
 ````
 # Variability Analysis 
 Variability analysis is crucial for understanding the spread and dispersion of data in your dataset. 
@@ -219,10 +172,7 @@ Standard Deviation of User Ratings by Genre:
 
 This query calculates the standard deviation of user ratings for different app genres. High standard deviations indicate a wide range of user ratings, which may suggest more variability in user preferences within that genre. Understanding this variability can help developers target specific genres with more or less rating consistency.
 ````sql
-SELECT genre, AVG(average_user_rating) AS avg_user_rating, STDEV(average_user_rating) AS rating_std_dev
-FROM data
-GROUP BY genre
-ORDER BY rating_std_dev DESC;
+ select STDEV(average_user_rating), genre from data group by genre
 ````
 Price Variability by Genre:
 
@@ -252,16 +202,6 @@ FROM data
 GROUP BY genre
 ORDER BY release_date_std_dev DESC;
 ````
-Version Update Frequency by Genre:
-
-This query explores the variability in app update frequency (measured in days between updates) within genres. High standard deviations in update frequencies may indicate irregular update patterns, which can be important for competitive analysis and user satisfaction.
-
-````sql
-SELECT genre, AVG(updated_date - released_date) AS avg_days_between_updates, STDEV(updated_date - released_date) AS update_freq_std_dev
-FROM data
-GROUP BY genre
-ORDER BY update_freq_std_dev DESC;
-````
 Content Rating Variability by Genre:
 
 This query calculates the standard deviation of user ratings within each genre and content rating combination. It helps identify genres and content ratings with varying user preferences, which can be important for building apps that align with audience expectations.
@@ -285,6 +225,8 @@ SELECT DISTINCT [genre], COUNT(*) AS app_count
 FROM [dbo].[data]
 GROUP BY [genre]
 ORDER BY app_count DESC;
+or can be written as:
+select count(genre) as countgenre, genre from data group by genre order by countgenre DESC
 ````
 Explore Content Ratings:
 
@@ -365,9 +307,7 @@ Genre Analysis for User Ratings and Engagement:
 
 This query is helpful because it reveals which app genres have the highest average user rating and the most user reviews provides actionable insights for app developers. It assists in genre selection, user engagement strategies, and competitive positioning. Understanding user preferences and satisfaction is key to building successful apps and maintaining a competitive edge in the market.
 ````sql
-SELECT genre, 
-       AVG(average_user_rating) AS avg_rating, 
-       SUM(number_of_reviews) AS total_reviews
+SELECT genre, AVG(average_user_rating) AS avg_rating, SUM(number_of_reviews) AS total_reviews
 FROM data
 WHERE average_user_rating IS NOT NULL
 GROUP BY genre
@@ -384,7 +324,7 @@ SELECT content_rating,
 FROM data
 WHERE average_user_rating IS NOT NULL
 GROUP BY content_rating
-ORDER BY avg_rating DESC, total_reviews DESC;
+ORDER BY avg_rating DESC
 ````
 Price Analysis for User Ratings and Engagement:
 
@@ -398,7 +338,7 @@ SELECT
 FROM data
 WHERE average_user_rating IS NOT NULL
 GROUP BY price
-ORDER BY avg_rating DESC, total_reviews DESC;
+ORDER BY avg_rating DESC
 ````
 Top Developers Analysis for App Inspiration and Insights:
 
