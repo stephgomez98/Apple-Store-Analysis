@@ -1,7 +1,7 @@
 # Apple-Store-Analysis 📱
 An app developer needs data driven insights to decide what type of app to build.
 # Context
-In this project the app developers are identified as the stakeholders. App developers often rely on data-driven insights to determine what type of app to build, understanding user preferences, market trends, and the competitive landscape. For this project I will be helped the app developer gain these insights in order to be more strategic in their decision-making process, leading to the development of apps that are aligned with user preferences, market trends, and have a competitive advantage in the marketplace.
+In this project the app developers are identified as the stakeholders. App developers often rely on data-driven insights to determine what type of app to build, understanding user preferences, market trends, and the competitive landscape. For this project I will be helping the app developer gain these insights in order to be more strategic in their decision-making process, leading to the development of apps that are aligned with user preferences, market trends, and have a competitive advantage in the marketplace.
 # Dataset Source
 https://www.kaggle.com/datasets/gauthamp10/apple-appstore-apps. 
 # Objective
@@ -438,6 +438,15 @@ FROM data
 WHERE price > 10
 ORDER BY price DESC
 ````
+# Window Functions
+````sql
+
+````
+# Case When
+
+# Common Table Expressions
+
+# Stored Procedures
 
 # Final Recommendations using POWER BI
 
