@@ -442,6 +442,7 @@ ORDER BY price DESC
 ````sql
 
 ````
+# Sub Queries
 # Case When
 
 # Common Table Expressions
